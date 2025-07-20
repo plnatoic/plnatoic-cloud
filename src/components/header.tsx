@@ -17,6 +17,7 @@ const Logo = () => (
 export default function Header() {
   const navLinks = [
     { name: 'About', href: '#about' },
+    { name: 'Sanctuary', href: '#sanctuary' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -45,7 +46,9 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="p-0">
               <SheetHeader className="p-6 pb-6">
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <SheetTitle>
+                  <span className="sr-only">Navigation Menu</span>
+                </SheetTitle>
                 <Logo />
               </SheetHeader>
               <nav className="grid gap-6 text-lg font-medium">
