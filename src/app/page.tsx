@@ -14,7 +14,7 @@ export default function Home() {
       </main>
       <footer className="bg-background py-6 text-center text-muted-foreground">
         <div className="container mx-auto px-4">
-          <p>&copy; {new Date().getFullYear()} Persona Canvas. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Platonic Area. All rights reserved.</p>
         </div>
       </footer>
     </div>
