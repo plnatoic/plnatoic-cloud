@@ -9,14 +9,13 @@ import logo from './logo.svg';
 
 const Logo = () => (
   <Link href="#" className="flex items-center gap-2" aria-label="Platoic Home">
-    <Image src={logo} alt="Logo" width={1178} height={534} className="h-10 w-auto"/>
+    <Image src={logo} alt="Logo" width={1178} height={534} className="h-12 w-auto"/>
   </Link>
 );
 
 export default function Header() {
   const navLinks = [
     { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
     { name: 'Contact', href: '#contact' },
   ];
 
