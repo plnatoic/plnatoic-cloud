@@ -1,15 +1,16 @@
+
 'use client';
 import { Menu } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import { ThemeToggle } from './theme-toggle';
 import Image from 'next/image';
 import logo from './logo.svg';
 
 const Logo = () => (
   <Link href="#" className="flex items-center gap-2" aria-label="Platoic Home">
-    <Image src={logo} alt="Logo" width={1178} height={534} className="h-12 w-auto"/>
+    <Image src={logo} alt="Logo" width={1178} height={534} className="h-16 w-auto"/>
   </Link>
 );
 
@@ -43,10 +44,11 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0">
-              <nav className="grid gap-6 text-lg font-medium mt-16">
-                <div className="px-6 pb-6">
-                  <Logo />
-                </div>
+              <SheetHeader className="p-6 pb-6">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <Logo />
+              </SheetHeader>
+              <nav className="grid gap-6 text-lg font-medium">
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
