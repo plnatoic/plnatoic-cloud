@@ -1,11 +1,8 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 
 const aboutMeText = `I use animation as a third dimension by which to simplify experiences and kuiding thro each and every interaction. I'm not adding motion just to spruce things up, but doing it in ways that.`;
-
-const skills = ['React', 'Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS', 'Firebase'];
 
 export default function HeroSection() {
   return (
@@ -20,18 +17,6 @@ export default function HeroSection() {
           <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
             {aboutMeText}
           </p>
-          <div className="flex flex-wrap items-center gap-4 pt-4">
-            <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-                    Best Skill On
-                </span>
-                <div className="flex flex-wrap justify-center gap-2">
-                    {skills.map((skill) => (
-                    <Badge key={skill} variant="secondary" className="rounded-md px-3 py-1 text-sm">{skill}</Badge>
-                    ))}
-                </div>
-            </div>
-          </div>
         </div>
         <div className="flex justify-center">
             <div className="relative h-[450px] w-[350px] rounded-lg border-8 border-card bg-card shadow-2xl">
