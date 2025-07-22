@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+
 
 // Import iztro library
 const iztro = require('iztro');
@@ -48,17 +47,7 @@ export async function POST(request: NextRequest) {
     // Get horoscope data using iztro library
     const horoscope = iztro.astro.bySolar(birthDate, timeIndex, gender, true, 'vi-VN');
 
-    // Save the result to Firestore
-    try {
-      await addDoc(collection(db, 'horoscopes'), {
-        input: { birthDate, birthHour, gender },
-        result: JSON.parse(JSON.stringify(horoscope)),
-        createdAt: new Date().toISOString(),
-      });
-    } catch (dbError) {
-      console.error('Error saving to Firestore:', dbError);
-      // We'll still return the data to the user even if DB save fails
-    }
+
 
     // Return the horoscope data
     return NextResponse.json(horoscope);
