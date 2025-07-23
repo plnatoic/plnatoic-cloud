@@ -5,11 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/header';
-import ResponseConsole from '@/components/ui/ResponseConsole';
 
 interface HoroscopeData {
   solarDate: string;
@@ -50,7 +48,6 @@ export default function LifePage() {
   const [horoscope, setHoroscope] = useState<HoroscopeData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showConsole, setShowConsole] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +73,6 @@ export default function LifePage() {
 
       const data = await response.json();
       setHoroscope(data);
-      setShowConsole(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Có lỗi xảy ra');
     } finally {
@@ -87,13 +83,9 @@ export default function LifePage() {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   return (
-    <TooltipProvider delayDuration={100}>
-      <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-      {horoscope && showConsole && (
-        <ResponseConsole data={horoscope} onClose={() => setShowConsole(false)} />
-      )}
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">Lá Số Tử Vi</h1>
@@ -196,97 +188,187 @@ export default function LifePage() {
                 </CardContent>
               </Card>
 
-              {/* Horoscope Chart */}
-              <div className="bg-gray-900 text-white p-4 rounded-lg font-sans">
-                <div className="grid grid-cols-4 grid-rows-4 gap-1 max-w-5xl mx-auto" style={{ gridTemplateRows: 'repeat(4, 9rem)' }}>
-                  {(() => {
-                    const palacePositions = [
-                      'Thìn', 'Tỵ',   'Ngọ',  'Mùi',
-                      'Mão',  null,   null,   'Thân',
-                      'Dần',  null,   null,   'Dậu',
-                      'Sửu',  'Tý',   'Hợi',  'Tuất'
-                    ];
+              {/* 12 Palace Grid */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-center text-xl font-bold">
+                    📜 BẢN ĐỒ 12 CUNG TỬ VI
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 gap-1 max-w-4xl mx-auto">
+                    {/* Arrange palaces in traditional tử vi grid layout */}
+                    {(() => {
+                      // Create a mapping for traditional palace positions
+                      const palacePositions = [
+                        4, 5, 6, 7,    // Top row: Tỵ, Ngọ, Mùi, Thân
+                        3, -1, -1, 8,  // Second row: Thìn, (center), (center), Dậu  
+                        2, -1, -1, 9,  // Third row: Mão, (center), (center), Tuất
+                        1, 0, 11, 10   // Bottom row: Dần, Sửu, Tý, Hợi
+                      ];
 
-                    const palaceByBranch = horoscope.palaces.reduce((acc, p) => {
-                      acc[p.earthlyBranch] = p;
-                      return acc;
-                    }, {} as { [key: string]: any });
+                      const earthlyBranches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+                      const palaceByBranch: { [key: string]: any } = {};
+                      
+                      horoscope.palaces.forEach(palace => {
+                        palaceByBranch[palace.earthlyBranch] = palace;
+                      });
 
-                    const chartCells = palacePositions.map((branch, index) => {
-                      if (branch === null) {
-                        // This logic ensures the center box is rendered only once.
-                        if (index === 5) {
-                          return (
-                            <div key="center-info" className="col-span-2 row-span-2 p-4 border-2 border-purple-500 bg-gray-800/50 flex flex-col justify-center items-center text-center">
-                                <h3 className="font-bold text-lg mb-2 text-purple-300">Thông Tin Lá Số</h3>
-                                <p className="text-sm">Dương Lịch: {horoscope.solarDate}</p>
-                                <p className="text-sm">Âm Lịch: {horoscope.lunarDate}</p>
-                                <p className="text-sm">Giờ Sinh: {horoscope.time} ({horoscope.timeRange})</p>
-                                <p className="text-sm">Mệnh Chủ: {horoscope.soul}</p>
-                                <p className="text-sm">Thân Chủ: {horoscope.body}</p>
-                                <p className="text-sm">Ngũ Hành Cục: {horoscope.fiveElementsClass}</p>
-                                <p className="text-sm">Con Giáp: {horoscope.zodiac}</p>
-                            </div>
-                          );
+                      return palacePositions.map((pos, index) => {
+                        if (pos === -1) {
+                          // Center cells - show basic info
+                          if (index === 5) {
+                            return (
+                              <div key={index} className="aspect-square border-2 border-gray-300 p-2 bg-yellow-50 flex flex-col justify-center items-center text-center">
+                                <div className="text-lg font-bold text-red-600">LÁ SỐ</div>
+                                <div className="text-lg font-bold text-red-600">TỬ VI</div>
+                                <div className="text-xs mt-1">
+                                  <div>Họ Tên:</div>
+                                  <div className="font-semibold">Nguyễn Văn A</div>
+                                </div>
+                              </div>
+                            );
+                          } else if (index === 6) {
+                            return (
+                              <div key={index} className="aspect-square border-2 border-gray-300 p-2 bg-blue-50 flex flex-col justify-center items-center text-center">
+                                <div className="text-sm">
+                                  <div><span className="font-semibold">Âm Dương:</span></div>
+                                  <div className="text-xs">{gender === 'male' ? 'Dương Nam' : 'Âm Nữ'}</div>
+                                  <div className="mt-1"><span className="font-semibold">Tuổi:</span></div>
+                                  <div className="text-xs">{new Date().getFullYear() - new Date(birthDate).getFullYear()} tuổi</div>
+                                  <div className="mt-1"><span className="font-semibold">Ngày Sinh:</span></div>
+                                  <div className="text-xs">{horoscope.solarDate}</div>
+                                </div>
+                              </div>
+                            );
+                          } else if (index === 9) {
+                            return (
+                              <div key={index} className="aspect-square border-2 border-gray-300 p-2 bg-green-50 flex flex-col justify-center items-center text-center">
+                                <div className="text-sm">
+                                  <div><span className="font-semibold">Can Chi:</span></div>
+                                  <div className="text-xs">{horoscope.chineseDate}</div>
+                                  <div className="mt-1"><span className="font-semibold">Sinh Giờ:</span></div>
+                                  <div className="text-xs">{horoscope.time}</div>
+                                  <div className="mt-1"><span className="font-semibold">Bản Mệnh:</span></div>
+                                  <div className="text-xs">{horoscope.fiveElementsClass}</div>
+                                </div>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div key={index} className="aspect-square border-2 border-gray-300 p-2 bg-purple-50 flex flex-col justify-center items-center text-center">
+                                <div className="text-sm">
+                                  <div><span className="font-semibold">Cung Lượng:</span></div>
+                                  <div className="text-xs">Tử Vi</div>
+                                  <div className="mt-1"><span className="font-semibold">Hạn nằm:</span></div>
+                                  <div className="text-xs">Đại Hạn</div>
+                                  <div className="mt-1"><span className="font-semibold">Lập lúc:</span></div>
+                                  <div className="text-xs">{new Date().toLocaleString('vi-VN')}</div>
+                                </div>
+                              </div>
+                            );
+                          }
                         }
-                        return null; // Render nothing for other null cells
-                      }
 
-                      const palace = palaceByBranch[branch];
-                      if (!palace) {
-                          return <div key={index} className="border border-purple-400/30 bg-gray-800/30"></div>;
-                      }
+                        const branch = earthlyBranches[pos];
+                        const palace = palaceByBranch[branch];
+                        
+                        if (!palace) return <div key={index} className="aspect-square border border-gray-300"></div>;
 
-                      const majorStars = palace.majorStars.map((s: any) => s.name).join(', ');
-                      const minorStars = palace.minorStars.map((s: any) => s.name).join(', ');
-                      let palaceTitle = palace.name.replace('Cung ', '');
-                      if (palace.isSoulPalace) palaceTitle += ' (Mệnh)';
-                      if (palace.isBodyPalace) palaceTitle += ' (Thân)';
+                        const majorStars = palace.majorStars.map((s: any) => s.name);
+                        const minorStars = palace.minorStars.map((s: any) => s.name);
+                        const allStars = [...majorStars, ...minorStars].slice(0, 8); // Limit stars to fit
+
+                        let palaceTitle = palace.name;
+                        const tags = [];
+                        if (palace.isSoulPalace) tags.push('MỆNH');
+                        if (palace.isBodyPalace) tags.push('THÂN');
+                        if (palace.isOriginalPalace) tags.push('LAI NHÂN');
+
+                        return (
+                          <div key={index} className="aspect-square border-2 border-gray-400 p-1 bg-white relative overflow-hidden">
+                            {/* Palace name and branch */}
+                            <div className="text-center border-b border-gray-300 pb-1 mb-1">
+                              <div className="text-xs font-bold text-blue-600">
+                                {palace.heavenlyStem}{palace.earthlyBranch}
+                              </div>
+                              <div className="text-xs font-semibold text-red-600">
+                                {palaceTitle.replace('Cung ', '')}
+                                {tags.length > 0 && (
+                                  <div className="text-xs text-green-600 font-bold">
+                                    ({tags.join(',')})
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* Stars */}
+                            <div className="text-xs space-y-0.5">
+                              {allStars.map((star, starIndex) => (
+                                <div key={starIndex} className="text-center leading-tight">
+                                  <span className={`${
+                                    majorStars.includes(star) 
+                                      ? 'text-red-600 font-semibold' 
+                                      : 'text-blue-600'
+                                  }`}>
+                                    {star}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Age range in corner */}
+                            <div className="absolute bottom-0 right-0 text-xs bg-yellow-100 px-1 rounded-tl">
+                              {palace.decadal.range.join('-')}
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()
+                    }
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Detailed Palace Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Chi Tiết Thông Tin 12 Cung</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {horoscope.palaces.map((palace: any, index: number) => {
+                      const majorStars = palace.majorStars.map((s: any) => s.name).join(', ') || 'Không có';
+                      const minorStars = palace.minorStars.map((s: any) => s.name).join(', ') || 'Không có';
+                      
+                      let palaceTitle = palace.name;
+                      const tags = [];
+                      if (palace.isSoulPalace) tags.push('MỆNH');
+                      if (palace.isBodyPalace) tags.push('THÂN');
+                      if (palace.isOriginalPalace) tags.push('LAI NHÂN');
+                      if (tags.length > 0) {
+                        palaceTitle += ` (${tags.join(', ')})`;
+                      }
 
                       return (
-                        <Tooltip key={palace.name}>
-                          <TooltipTrigger asChild>
-                            <div className={`p-2 border border-purple-400/30 bg-gray-800/30 flex flex-col cursor-pointer`}>
-                                <div className="flex justify-between text-xs text-gray-400">
-                                    <span className="font-bold text-purple-300">{palaceTitle}</span>
-                                    <span>{palace.heavenlyStem}{palace.earthlyBranch}</span>
-                                </div>
-                                <div className="flex-grow text-center my-1 space-y-1">
-                                    <p className="font-bold text-sm text-yellow-300">{majorStars || ' '}</p>
-                                    <p className="text-xs text-gray-200">{minorStars || ' '}</p>
-                                </div>
-                                <div className="flex justify-between text-xs text-gray-500">
-                                    <span>{palace.changsheng12}</span>
-                                    <span>ĐH: {palace.decadal.range.join('-')}</span>
-                                </div>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent className="p-4 bg-gray-900 border-purple-400 text-gray-50 max-w-xs">
-                            <h4 className="font-bold text-lg text-purple-300 mb-2">{palace.name}</h4>
-                            <div className="space-y-1 text-sm">
-                              <p><span className="font-semibold text-yellow-400">Chính Tinh:</span> {palace.majorStars.map(s => s.name).join(', ') || 'Không'}</p>
-                              <p><span className="font-semibold text-gray-300">Phụ Tinh:</span> {palace.minorStars.map(s => s.name).join(', ') || 'Không'}</p>
-                              <p><span className="font-semibold text-gray-300">Sao Tốt:</span> {palace.adjectiveStars.filter(s => s.type === 'good').map(s => s.name).join(', ') || 'Không'}</p>
-                              <p><span className="font-semibold text-red-400">Sao Xấu:</span> {palace.adjectiveStars.filter(s => s.type === 'bad').map(s => s.name).join(', ') || 'Không'}</p>
-                              <Separator className="my-2 bg-purple-400/30" />
-                              <p><span className="font-semibold">Vòng Tràng Sinh:</span> {palace.changsheng12}</p>
-                              <p><span className="font-semibold">Vòng Bác Sĩ:</span> {palace.boshi12}</p>
-                              <p><span className="font-semibold">Vòng Thái Tuế:</span> {palace.jiangqian12}</p>
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
+                        <div key={index} className="border rounded-lg p-3 space-y-2 bg-gray-50">
+                          <h3 className="font-semibold text-sm text-blue-600">{palaceTitle}</h3>
+                          <div className="text-xs space-y-1">
+                            <div><strong>Can Chi:</strong> {palace.heavenlyStem}{palace.earthlyBranch}</div>
+                            <div><strong>Chính tinh:</strong> <span className="text-red-600">{majorStars}</span></div>
+                            <div><strong>Phụ tinh:</strong> <span className="text-blue-600">{minorStars}</span></div>
+                            <div><strong>Đại hạn:</strong> {palace.decadal.range.join('-')} tuổi</div>
+                          </div>
+                        </div>
                       );
-                    });
-
-                    return chartCells;
-                  })()}
-                </div>
-              </div>
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
         </div>
       </main>
     </div>
-    </TooltipProvider>
   );
 }
