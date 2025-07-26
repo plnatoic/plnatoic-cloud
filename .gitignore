@@ -1,2 +1,38 @@
-node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Build directory
+/.next/
+/out/
+
+# Production build
+/build
+
+# Static exports
+/export
+
+# Environment variables
+# Do not commit .env files as they may contain sensitive information.
+# Instead, use a .env.example file to list the required variables.
+.env*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local development
+.DS_Store
+*.pem
+
+# Turbopack
+.turbo
+
+# Vercel
+.vercel
 .vercel
