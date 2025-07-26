@@ -25,10 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(
-        'min-h-screen bg-gradient-to-b from-white to-gray-50 font-sans antialiased',
-        poppins.className
-      )}>
+      <body className={`min-h-screen bg-gradient-to-b from-white to-gray-50 font-sans antialiased ${poppins.className}`}>
         <ThemeProvider>
           {children}
           <Toaster />

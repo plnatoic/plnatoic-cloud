@@ -18,6 +18,11 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Suppress hydration warnings caused by browser extensions
+  reactStrictMode: false,
+  experimental: {
+    suppressHydrationWarning: true,
+  },
 };
 
 module.exports = nextConfig;

@@ -136,8 +136,10 @@ const BlogCard = ({ imageUrl = 'https://i.pinimg.com/1200x/b8/20/50/b820509d7c34
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
                     src: imageUrl,
                     alt: title,
-                    layout: "fill",
-                    objectFit: "cover"
+                    fill: true,
+                    style: {
+                        objectFit: 'cover'
+                    }
                 }, void 0, false, {
                     fileName: "[project]/src/components/BlogCard.tsx",
                     lineNumber: 15,
@@ -527,7 +529,7 @@ const HomePage = async ({ searchParams })=>{
                                             date: new Date(post.created_at).toLocaleDateString(),
                                             // Using placeholders as these are not in the DB
                                             category: "Blog",
-                                            imageUrl: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            imageUrl: post.image_url || 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
                                             lineNumber: 74,

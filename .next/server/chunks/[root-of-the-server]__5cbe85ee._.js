@@ -80,7 +80,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$
 ;
 async function GET() {
     try {
-        const posts = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"]`SELECT id, slug, title, created_at FROM posts ORDER BY created_at DESC`;
+        const posts = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"]`SELECT id, slug, title, created_at, image_url FROM posts ORDER BY created_at DESC`;
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json(posts);
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -93,7 +93,7 @@ async function GET() {
 }
 async function POST(request) {
     try {
-        const { title, content } = await request.json();
+        const { title, content, imageUrl } = await request.json();
         if (!title || !content) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: 'Missing required fields'
@@ -104,8 +104,8 @@ async function POST(request) {
         // Create a URL-friendly slug from the title
         const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const result = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"]`
-      INSERT INTO posts (title, content, slug)
-      VALUES (${title}, ${content}, ${slug})
+      INSERT INTO posts (title, content, slug, image_url)
+      VALUES (${title}, ${content}, ${slug}, ${imageUrl})
       RETURNING id, slug;
     `;
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json(result[0], {
