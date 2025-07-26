@@ -1,34 +1,47 @@
 import Header from '@/components/header';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 import BlogCard from '@/components/BlogCard';
 import Pagination from '@/components/Pagination';
+import { fetchPaginatedPosts } from '@/lib/data';
 
-const HomePage = () => {
+// Define the expected shape of searchParams
+interface HomePageProps {
+  searchParams?: {
+    page?: string;
+  };
+}
+
+const HomePage = async ({ searchParams }: HomePageProps) => {
+  const currentPage = Number(searchParams?.page) || 1;
+  const { posts, totalPages } = await fetchPaginatedPosts(currentPage);
+
   return (
     <div className="bg-white">
       <Header />
       <main>
         {/* Hero Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="bg-gray-50 rounded-2xl p-8 md:p-12 lg:flex lg:items-center lg:justify-between">
+          <div className="rounded-2xl bg-gradient-to-br from-white via-blue-50 to-gray-100 shadow-xl p-8 md:p-12 lg:flex lg:items-center lg:justify-between">
             <div className="lg:w-1/2">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                Website heading
+              <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-400">
+                  AI-Powered
+                </span>
                 <br />
-                goes here
+                Solutions, Instantly.
               </h1>
               <div className="mt-8 flex space-x-4">
                 <Button className="rounded-md px-8 py-3 text-sm font-semibold">Explore</Button>
                 <Button variant="outline" className="rounded-md px-8 py-3 text-sm font-semibold">Create</Button>
               </div>
             </div>
-            <div className="mt-10 lg:mt-0 lg:w-2/5 flex justify-center lg:justify-end">
+            <div className="mt-10 lg:mt-0 lg:w-2/5 hidden lg:flex justify-center lg:justify-end">
               <div className="bg-blue-600 rounded-2xl p-4 w-full max-w-xs shadow-lg text-white transform rotate-3">
                 <div className="relative h-48 w-full rounded-lg overflow-hidden mb-4">
-                  {/* Using a placeholder image for the cat */}
                   <Image
-                    src="/image.png" // Đường dẫn đúng
+                    src="/image.png" // Placeholder image
                     alt="Featured Cat"
                     layout="fill"
                     objectFit="cover"
@@ -56,20 +69,21 @@ const HomePage = () => {
         {/* Blog Posts Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {
-              [
-                { imageUrl: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Company', title: 'Reprehenderit laboris labore except', date: 'Oct 19, 2022' },
-                { imageUrl: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Product News', title: 'Ut labore elit incididunt incididunt', date: 'Oct 19, 2022' },
-                { imageUrl: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Company', title: 'Veniam nostrud nostrud sint nis', date: 'Oct 19, 2022' },
-                { imageUrl: 'https://images.unsplash.com/photo-1559028006-44a3a2f209e5?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Product News', title: 'Ut labore elit incididunt incididunt', date: 'Oct 19, 2022' },
-                { imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Trends', title: 'Veniam nostrud nostrud sint nis', date: 'Oct 19, 2022' },
-                { imageUrl: 'https://images.unsplash.com/photo-1586953208448-b95a15955627?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'Product News', title: 'Ut labore elit incididunt incididunt', date: 'Oct 19, 2022' },
-              ].map((post, index) => (
-                <BlogCard key={index} {...post} />
-              ))
-            }
+            {posts.map((post: any) => (
+              <Link href={`/blog/${post.slug}`} key={post.id}>
+                <BlogCard
+                  title={post.title}
+                  date={new Date(post.created_at).toLocaleDateString()}
+                  // Using placeholders as these are not in the DB
+                  category="Blog"
+                  imageUrl="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                />
+              </Link>
+            ))}
           </div>
-          <Pagination />
+          <div className="mt-12">
+            <Pagination totalPages={totalPages} />
+          </div>
         </div>
       </main>
     </div>
