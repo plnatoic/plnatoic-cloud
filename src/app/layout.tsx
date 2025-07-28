@@ -16,6 +16,16 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Platoic Cloud',
   description: 'AI-Powered Solutions',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -25,10 +35,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`min-h-screen bg-gradient-to-b from-white to-gray-50 font-sans antialiased ${poppins.className}`}>
+            <body 
+        className={`min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 font-sans antialiased ${poppins.className}`}
+        suppressHydrationWarning={true}
+      >
         <ThemeProvider>
+          <div className="flex-1 flex flex-col">
           {children}
           <Toaster />
+          </div>
         </ThemeProvider>
         <Footer />
       </body>

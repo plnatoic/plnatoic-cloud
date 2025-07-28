@@ -10,6 +10,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'placehold.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'ictv.1cdn.vn',
+      },
+      {
+        protocol: 'https',
+        hostname: 'husta.vn',
+      }
     ],
   },
   typescript: {
@@ -20,9 +28,6 @@ const nextConfig = {
   },
   // Suppress hydration warnings caused by browser extensions
   reactStrictMode: false,
-  experimental: {
-    suppressHydrationWarning: true,
-  },
 };
 
 module.exports = nextConfig;

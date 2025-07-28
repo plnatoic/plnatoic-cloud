@@ -31,7 +31,7 @@ export default function AdminBlogPage() {
   const fetchPosts = () => {
     fetch('/api/posts')
       .then(res => res.json())
-      .then(data => setPosts(data.posts))
+      .then(data => setPosts(data))
       .catch(() => setError('Failed to fetch posts.'));
   };
 

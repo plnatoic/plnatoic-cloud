@@ -14,7 +14,7 @@ export async function fetchPaginatedPosts(currentPage: number) {
 
     // Fetch the posts for the current page
     const posts = await sql`
-      SELECT id, slug, title, created_at
+      SELECT id, slug, title, created_at, image_url
       FROM posts
       ORDER BY created_at DESC
       LIMIT ${POSTS_PER_PAGE}

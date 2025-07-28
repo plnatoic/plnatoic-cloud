@@ -1,14 +1,18 @@
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import rehypeRaw from 'rehype-raw';
 import ClientFormattedDate from '@/components/ClientFormattedDate';
 import Image from 'next/image';
+import Header from '@/components/header';
 
 // This function fetches the data for a single post from our API
 async function getPost(slug: string) {
   // We need to construct the absolute URL for fetching on the server
   const baseUrl = process.env.VERCEL_URL 
     ? `https://${process.env.VERCEL_URL}` 
-    : 'http://localhost:3000';
+    : `http://localhost:${process.env.PORT || 9002}`;
 
   const res = await fetch(`${baseUrl}/api/posts/${slug}`, {
     // Revalidate the data every hour to keep it fresh
@@ -33,10 +37,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const post = await getPost(params.slug);
 
   return (
-    <article className="max-w-4xl mx-auto py-8 px-4 bg-gray-900 text-white">
+    <>
+      <Header />
+      <article className="max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-center">{post.title}</h1>
             <p className="text-gray-400 mb-8 text-center">Published on <ClientFormattedDate dateString={post.created_at} /></p>
-      
       {post.image_url && (
         <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
           <Image
@@ -48,12 +53,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           />
         </div>
       )}
-
-      {/* This is where the markdown content is rendered */}
-      <div className="prose prose-invert lg:prose-xl max-w-none">
-        <ReactMarkdown>{post.content}</ReactMarkdown>
+        <div className="prose lg:prose-xl max-w-none">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkBreaks]}
+            rehypePlugins={[rehypeRaw]}
+          >
+            {post.content}
+          </ReactMarkdown>
       </div>
     </article>
+    </>
   );
 }
 

@@ -14,7 +14,11 @@ interface HomePageProps {
 }
 
 const HomePage = async ({ searchParams }: HomePageProps) => {
-    const page = searchParams?.page ?? '1';
+  // Đảm bảo searchParams được await nếu là Promise
+  const params = (searchParams && typeof (searchParams as any).then === 'function')
+    ? await (searchParams as any)
+    : searchParams;
+  const page = params?.page ?? '1';
   const currentPage = Number(page);
   const { posts, totalPages } = await fetchPaginatedPosts(currentPage);
 
@@ -70,8 +74,13 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
         {/* Blog Posts Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post: any) => (
-              <Link href={`/blog/${post.slug}`} key={post.id}>
+            {posts.map((post, index) => (
+              <Link 
+                href={`/blog/${post.slug}`} 
+                key={post.id}
+                className="block animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <BlogCard
                   title={post.title}
                                     dateString={post.created_at}

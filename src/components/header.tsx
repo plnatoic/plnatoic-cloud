@@ -1,88 +1,100 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Logo from './logo';
 import { Button } from './ui/button';
+import MobileMenu from './MobileMenu';
 
-const HeaderV2 = () => {
+const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Body scroll lock for mobile menu
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  const navLinks = [
+    { href: '/blog', label: 'Blog' },
+    { href: '/about', label: 'About me' },
+    { href: '/faqs', label: 'FAQs' },
+    { href: '/sanctuary', label: 'Sanctuary' },
+  ];
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/60 bg-white/80 dark:border-slate-800/60 dark:bg-black/80 backdrop-blur-sm transition-all duration-300 hover:bg-white/90 dark:hover:bg-black/90">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex-shrink-0">
-            <Link href="/" passHref>
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <Link href="/" className="group flex items-center gap-2 outline-none" aria-label="Home">
+            <div className="relative">
               <Logo />
-            </Link>
-          </div>
-          {/* Desktop menu */}
-          <div className="hidden md:flex md:items-center md:space-x-10">
-            <Link href="/blog" className="text-gray-600 hover:text-blue-600 font-medium text-sm">
-              Blog
-            </Link>
-            <Link href="/about" className="text-gray-600 hover:text-blue-600 font-medium text-sm">
-              About me
-            </Link>
-            <Link href="/faqs" className="text-gray-600 hover:text-blue-600 font-medium text-sm">
-              FAQs
-            </Link>
-            <Link href="/sanctuary" className="text-gray-600 hover:text-blue-600 font-medium text-sm">
-              Sanctuary
-            </Link>
-          </div>
-          <div className="hidden md:block">
-            <Button asChild className="rounded-full px-6">
-              <Link href="/login">Log in</Link>
-            </Button>
-          </div>
-          {/* Mobile menu button */}
+              <span className="absolute inset-0 bg-blue-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500 -z-10"></span>
+            </div>
+           
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1 ml-auto">
+            {navLinks.map((link) => {
+              const isActive = pathname.startsWith(link.href);
+              return (
+                <Link 
+                  key={link.href}
+                  href={link.href}
+                  className={`relative px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
+                    isActive 
+                      ? 'text-blue-600 dark:text-blue-400' 
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+                  } group`}
+                >
+                  {link.label}
+                  <span 
+                    className={`absolute left-1/2 -bottom-1 w-1.5 h-1.5 -translate-x-1/2 rounded-full bg-blue-500 transition-all duration-300 ${
+                      isActive ? 'scale-100' : 'scale-0 group-hover:scale-100'
+                    }`}
+                  />
+                  <span className="absolute inset-0 bg-blue-500/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Mobile Menu Button */}
           <button
-            className="flex md:hidden items-center justify-center p-2 rounded-full hover:bg-gray-100 focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Open menu"
+            className="md:hidden h-10 w-10 rounded-full flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
           >
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect y="6" x="4" width="16" height="1" rx="0.5" fill="#555" />
-              <rect y="11" x="4" width="16" height="1" rx="0.5" fill="#555" />
-              <rect y="16" x="4" width="16" height="1" rx="0.5" fill="#555" />
-            </svg>
+            {mobileMenuOpen ? (
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
-      {/* Mobile menu overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-30 flex justify-end md:hidden">
-          <div className="w-2/3 max-w-xs bg-white h-full shadow-lg p-6 flex flex-col space-y-6 animate-slide-in">
-            <button
-              className="self-end mb-4 p-2 rounded-full hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium text-base" onClick={() => setMobileMenuOpen(false)}>
-              Blog
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium text-base" onClick={() => setMobileMenuOpen(false)}>
-              About me
-            </Link>
-            <Link href="/faqs" className="text-gray-700 hover:text-blue-600 font-medium text-base" onClick={() => setMobileMenuOpen(false)}>
-              FAQs
-            </Link>
-            <Link href="/sanctuary" className="text-gray-700 hover:text-blue-600 font-medium text-base" onClick={() => setMobileMenuOpen(false)}>
-              Sanctuary
-            </Link>
-            <Button asChild className="rounded-full px-6 w-full mt-4">
-              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log in</Link>
-            </Button>
-          </div>
-        </div>
-      )}
+
+      {/* Mobile Menu Component */}
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </header>
   );
 };
 
-export default HeaderV2;
+export default SiteHeader;
