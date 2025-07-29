@@ -17,6 +17,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'husta.vn',
+      },
+      {
+        protocol: 'https',
+        hostname: 'aceternity.com',
       }
     ],
   },

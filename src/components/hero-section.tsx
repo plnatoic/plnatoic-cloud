@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import AIToolsMarquee from './ai-tools-marquee';
 
 const aboutMeText = `I use animation as a third dimension by which to simplify experiences and guiding through each and every interaction. I'm not adding motion just to spruce things up, but doing it in ways that enhance usability.`;
 
@@ -43,6 +44,9 @@ export default function HeroSection() {
                 </div>
             </div>
         </div>
+      </div>
+            <div className="relative z-10 mt-16 md:mt-24">
+        <AIToolsMarquee />
       </div>
     </section>
   );

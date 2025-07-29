@@ -7,14 +7,20 @@ interface ClientFormattedDateProps {
 }
 
 const ClientFormattedDate: React.FC<ClientFormattedDateProps> = ({ dateString }) => {
-  const [formattedDate, setFormattedDate] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This code runs only on the client, after hydration
-    setFormattedDate(new Date(dateString).toLocaleDateString());
-  }, [dateString]);
+    setIsClient(true);
+  }, []);
 
-  // Render the formatted date, or nothing/placeholder until it's ready
+  if (!isClient) {
+    // Render a placeholder or nothing on the server and initial client render
+    return null;
+  }
+
+  // Now that we're on the client, we can safely render the formatted date
+  const formattedDate = new Date(dateString).toLocaleDateString();
+
   return <>{formattedDate}</>;
 };
 

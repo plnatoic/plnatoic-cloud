@@ -101,7 +101,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-gray-300 dark:border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm">
+        <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-sm">
           <p className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-0">&copy; 2025 Plnatonic, Inc. All rights reserved.</p>
           <div className="flex space-x-4 text-gray-600 dark:text-gray-400">
             <Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</Link>
