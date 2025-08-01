@@ -1,37 +1,32 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-      },
-      {
-        protocol: 'https',
-        hostname: 'ictv.1cdn.vn',
-      },
-      {
-        protocol: 'https',
-        hostname: 'husta.vn',
-      },
-      {
-        protocol: 'https',
-        hostname: 'aceternity.com',
-      }
-    ],
-  },
+import type {NextConfig} from 'next';
+
+const nextConfig: NextConfig = {
+  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Suppress hydration warnings caused by browser extensions
-  reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+  // Vercel deployment optimizations
+  output: 'standalone',
+  experimental: {
+    serverComponentsExternalPackages: ['genkit'],
+  },
+  // Environment variables for production
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

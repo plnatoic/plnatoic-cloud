@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/summarize-about-me.ts';
+import '@/ai/flows/generate-excerpt.ts';

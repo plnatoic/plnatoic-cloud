@@ -1,92 +1,58 @@
-import Header from '@/components/header';
-import { fetchPaginatedPosts } from '@/lib/data';
-import Link from 'next/link';
-import Image from 'next/image';
-import Footer from '@/components/Footer';
-import HeroGettingStarted from '@/components/ui/aceternity/hero-getting-started';
+import { IconCloud } from "@/components/icon-cloud";
+import { BlogSection } from "@/components/blog-section";
+import { CategorySection } from "@/components/category-section";
+import { GridBackground } from "@/components/grid-background";
+import { ResourcesBank } from "@/components/resources-bank";
 
-import { BentoGrid, BentoGridItem } from '@/components/ui/aceternity/bento-grid';
-import { CardBody, CardContainer, CardItem } from '@/components/ui/aceternity/three-d-card';
-import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from '@tabler/icons-react';
+const slugs = [
+  "canva",
+  "notion",
+  "discord",
+  "figma",
+  "github",
+  "trello",
+  "slack",
+  "zoom",
+  "microsoftteams",
+  "chatgpt",
+  "googlebard",
+  "midjourney",
+  "dalle",
+  "synthesia",
+  "elevenlabs",
+  "grammarly",
+  "notionai",
+  "copilot",
+  "deepmind",
+  "replicate"
+];
 
-interface HomePageProps {
-  searchParams?: { page?: string };
-}
-
-const HomePage = async ({ searchParams }: HomePageProps) => {
-  const currentPage = Number(searchParams?.page || '1');
-  const { posts } = await fetchPaginatedPosts(currentPage);
-
-  const items = [
-    {
-      title: 'The Dawn of Innovation',
-      description: 'Explore the birth of groundbreaking ideas and inventions.',
-      header: <Skeleton />,
-      className: 'md:col-span-2',
-      icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-    },
-    {
-      title: 'The Art of Clean Code',
-      description: 'Dive into the principles of writing maintainable and scalable code.',
-      header: <Skeleton />,
-      className: 'md:col-span-1',
-      icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
-    },
-    {
-      title: 'The Power of Storytelling',
-      description: 'Understand the impact of narrative in design and development.',
-      header: <Skeleton />,
-      className: 'md:col-span-1',
-      icon: <IconSignature className="h-4 w-4 text-neutral-500" />,
-    },
-    {
-      title: 'Automated Workflows',
-      description: 'Build and automate your workflows with cutting-edge technology.',
-      header: <Skeleton />,
-      className: 'md:col-span-2',
-      icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
-    },
-  ];
-
+export default function Home() {
   return (
-    <main className="bg-white dark:bg-black">
-      <Header />
-      <HeroGettingStarted />
-
-      
-      <div className="py-20">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-800 dark:text-white mb-12">Featured Insights</h2>
-        <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
-          {items.map((item, i) => (
-            <BentoGridItem
-              key={i}
-              title={item.title}
-              description={item.description}
-              header={item.header}
-              className={item.className}
-              icon={item.icon}
-            />
-          ))}
-        </BentoGrid>
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      </div>
-
-    </main>
+    <>
+      <section className="relative w-full max-w-6xl mx-auto py-24 md:py-32 lg:py-40 bg-background">
+        <GridBackground />
+        <div className="relative z-10 container mx-auto px-4 md:px-6 grid lg:grid-cols-2 items-center gap-12">
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tight max-w-2xl mx-auto lg:mx-0">
+              Khám phá những công cụ AI tốt nhất để{" "}
+              <span className="bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+                sáng tạo và làm việc
+              </span>
+              .
+            </h1>
+            <p className="mt-6 max-w-xl mx-auto lg:mx-0 text-lg md:text-xl text-muted-foreground font-body">
+              Chúng tôi tổng hợp và đánh giá những công cụ AI hàng đầu, giúp bạn tìm thấy giải pháp hoàn hảo cho mọi nhu cầu.
+            </p>
+          </div>
+          <div className="w-full max-w-md mx-auto lg:max-w-none">
+            <IconCloud iconSlugs={slugs} />
+          </div>
+        </div>
+      </section>
+      <CategorySection />
+      <ResourcesBank />
+      <BlogSection />
+    </>
   );
-};
-
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
-
-export default HomePage;
+}
