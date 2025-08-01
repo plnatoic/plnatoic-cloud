@@ -20,9 +20,7 @@ const nextConfig: NextConfig = {
   },
   // Vercel deployment optimizations
   output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: ['genkit'],
-  },
+  serverExternalPackages: ['genkit'],
   // Environment variables for production
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,

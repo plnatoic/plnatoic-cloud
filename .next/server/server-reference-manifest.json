@@ -1,5 +1,1 @@
-{
-  "node": {},
-  "edge": {},
-  "encryptionKey": "VJdYNgvnxNoNWs1QTt32qbVPdXCauZhO+9e9yKcJoOU="
-}
+{"node":{"404a575e611227de1d583aa19dafd64b225ec1386c":{"workers":{"app/generate-excerpt/page":{"moduleId":"11775","async":true}},"layer":{"app/generate-excerpt/page":"action-browser"}}},"edge":{},"encryptionKey":"VJdYNgvnxNoNWs1QTt32qbVPdXCauZhO+9e9yKcJoOU="}
